@@ -19,7 +19,7 @@
       </span> 
     </div>
     
-    <div class="credits">coded by thooyork with <img src="@/assets/img/Vue.png"/> and <img src="@/assets/img/heart.png"/></div>
+    
     <!-- <div v-if="loading" class="loader">Loading sounds ...</div> -->
     <div class="slidecontainer">
       <span class="bpm">{{bpm}} bpm</span><br/>
@@ -51,6 +51,11 @@ export default {
         ]
     }
   },
+  created (){
+    this.$socket.on('server', (data) => {
+      console.log(data);
+    });
+  },
   mounted(){
     this.init();
   },
@@ -58,6 +63,7 @@ export default {
     bpm: {
         handler: function(val, oldVal) {
           Tone.Transport.bpm.value = this.bpm;
+          this.$socket.emit('controller', this.bpm)
         }
     },
     notevalue: {
@@ -69,6 +75,7 @@ export default {
             // this.$forceUpdate();
         }
     },
+    
   },
   methods:{
     toggleActivate:function(track, n){
